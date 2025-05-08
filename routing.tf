@@ -7,21 +7,12 @@ resource "aws_route_table" "terraform-public" {
   }
 
   tags = {
-    Name = var.Main_Routing_Table
+    Name = "${var.vpc_name}-main_rt"
   }
 }
 
 resource "aws_route_table_association" "terraform-public1" {
-  subnet_id      = aws_subnet.subnet1-public.id
-  route_table_id = aws_route_table.terraform-public.id
-}
-
-resource "aws_route_table_association" "terraform-public2" {
-  subnet_id      = aws_subnet.subnet2-public.id
-  route_table_id = aws_route_table.terraform-public.id
-}
-
-resource "aws_route_table_association" "terraform-public3" {
-  subnet_id      = aws_subnet.subnet3-public.id
+  count          = 3
+  subnet_id      = element(aws_subnet.subnet1-public.*.id, count.index)
   route_table_id = aws_route_table.terraform-public.id
 }
