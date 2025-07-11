@@ -16,3 +16,5 @@
     debug: 
       var: version 
     no_log: true   
+  - name: install basic tools
+    shell: apt update && apt install -y unzip net-tools  
