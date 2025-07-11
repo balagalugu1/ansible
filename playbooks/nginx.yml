@@ -14,4 +14,5 @@
     no_log: true
   - name: show the value of output  
     debug: 
-      var: version  
+      var: version 
+    no_log: true   
