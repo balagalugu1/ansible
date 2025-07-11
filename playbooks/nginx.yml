@@ -1,0 +1,15 @@
+---
+- name: playbook for install nginx on servers
+  hosts: testserver01:testserver02:testserver03
+  gather_facts: yes
+  become: yes
+  become_user: root
+  vars:
+    KOPS_VERSION='1.2.6'
+    KUBECTL_VERSION='1.2.7'
+  tasks:
+  - name: check ubuntu os version
+    shell: cat /etc/lsb-release | grep -i DISTRIB_DESCRIPTION | cut -d "=" -f2 | tr -d '"'
+    register: version
+    debug: 
+      var: version  
