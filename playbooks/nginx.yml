@@ -11,6 +11,7 @@
   - name: check ubuntu os version
     shell: cat /etc/lsb-release | grep -i DISTRIB_DESCRIPTION | cut -d "=" -f2 | tr -d '"'
     register: version
+    no_log: true
   - name: show the value of output  
     debug: 
       var: version  
