@@ -10,7 +10,7 @@ resource "aws_instance" "redisserver" {
   vpc_security_group_ids      = ["${aws_security_group.allow_all.id}"]
   associate_public_ip_address = true
   tags = {
-    Name = "${var.vpc_name}-redis_server-${count.index + 1}"
+    Name = "${var.vpc_name}-redis_server"
     Env  = var.env
   }
 }
