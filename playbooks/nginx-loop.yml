@@ -1,0 +1,39 @@
+---
+- name: Play for Install Nginx On Linux Servers
+  hosts: testserver01:testserver02:testserver03
+  gather_facts: yes
+  become: yes
+  become_user: root
+  vars:
+    KOPS_VERSION: '1.2.6'
+    KUBECTL_VERSION: '1.2.7'
+  tasks: 
+  - name: Check Ubuntu OS Version
+    shell: cat /etc/lsb-release | grep -i "DISTRIB_DESCRIPTION" | cut -d "=" -f2 | tr -d '"'
+    register: version
+    no_log: True
+
+  - name: show the value of output
+    debug:
+      var: version
+    no_log: True
+
+  - name: Perform Apt Update & Install nessasary tools
+    shell: apt update && apt install -y unzip net-tools 
+
+  - name: Install Nginx Package To The Linux Servers
+    apt: 
+     name: nginx
+     state: latest
+
+  - name: Copy Nginx Files As A Group
+    copy: |
+      src={{ item }}
+      dest=/var/www/html/{{item}}
+      owner=root
+      group=root
+      mode=u=rw,g=r,o=r
+    with_items:
+     - index.html
+     - style.css
+     - scorekeeper.js
