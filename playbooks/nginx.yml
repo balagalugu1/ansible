@@ -5,8 +5,8 @@
   become: yes
   become_user: root
   vars:
-    KOPS_VERSION='1.2.6'
-    KUBECTL_VERSION='1.2.7'
+    KOPS_VERSION: '1.2.6'
+    KUBECTL_VERSION: '1.2.7'
   tasks:
   - name: check ubuntu os version
     shell: cat /etc/lsb-release | grep -i DISTRIB_DESCRIPTION | cut -d "=" -f2 | tr -d '"'
