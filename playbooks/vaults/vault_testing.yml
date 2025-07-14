@@ -1,0 +1,69 @@
+#ansible-playbook -i invfile Playbooks/vault_testing.yml -vv --ask-vault-pass
+---
+  - name: Run AWS Cli Commands On All Servers
+    hosts: pvtip
+    gather_facts: yes
+    become: yes
+    become_user: root
+    serial: 3
+    vars:
+     user_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66303166656666316634336365346364333330353431393535366361393664346565303262653963
+          6437356164306265326166376438323064306639613464620a636364356635623832656564396332
+          63646335636362393936623736333761383162313866623436313839316262623663646537616339
+          3735643732663139610a646638323538313164666530383561386638373361383039656236393066
+          6163
+    tasks:
+       - name: Create .aws folder
+         shell: mkdir -p /root/.aws
+         ignore_errors: yes
+       - name: Copy Encrypted File To /tmp
+         copy:
+           src: /tmp/aws_creds
+           dest: /tmp/aws_creds
+           owner: root
+           group: root
+           mode: '0600'
+       - name: Copy Encrypted File To .aws folder
+         copy:
+           src: /tmp/aws_creds
+           dest: /root/.aws/credentials
+           owner: root
+           group: root
+           mode: '0600'
+       - name: Check S3 Buckets
+         shell: aws s3 ls | cut -d " " -f 3
+         register: buckets
+       - name: Get VPCS
+         shell: aws ec2 describe-vpcs | jq ".Vpcs[].VpcId" -r
+         register: vpcs
+       - name: Print VPC ID
+         debug:
+          var: vpcs        
+       - name: Creating admin "{{item}}"
+         user:
+           name: "{{item}}"
+           state: present
+           comment: Admin User "{{item}}"
+           groups: root
+           shell: /bin/bash
+           group: sudo
+           password: "{{ '%s' | format(user_password) | regex_replace('\n', '') | password_hash('sha512') }}"
+           password_expire_min: 1
+         with_items:
+         - anand
+         - bala
+         - chandra
+         - david
+       - name: Replace Password Authentication To Yes
+         ansible.builtin.lineinfile:
+           path: /etc/ssh/sshd_config
+           regexp: '^PasswordAuthentication no'
+           line: PasswordAuthentication yes
+           backup: yes
+         notify:
+         -  Restart SSH Service
+    handlers:
+      - name: Restart SSH Service
+        shell: service sshd restart
