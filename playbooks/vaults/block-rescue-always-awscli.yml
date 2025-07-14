@@ -11,7 +11,7 @@
     - name: Check if Unzip Exists
       shell: unzip
     - name: Check if jq Exists
-      shell: jq
+      shell: apt install -y jq
     - name: Check if AWS Exists
       shell: aws --version
     when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '24.04'    
