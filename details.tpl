@@ -7,15 +7,15 @@ dockerworker02 ansible_port=22 ansible_host=${worker02}  ansible_user=ubuntu ans
 dockerworker03 ansible_port=22 ansible_host=${worker03}  ansible_user=ubuntu ansible_ssh_private_key_file=/root/ansibleadminkey.pem 
 
 [docker_master]
-${master01}
+dockermaster01
 
 [docker_managers]
-${master02}
-${master03}
+dockermaster02
+dockermaster03
 
 [docker_workers]
-${worker01}
-${worker02}
-${worker03}
+dockerworker01
+dockerworker02
+dockerworker03
 
 
