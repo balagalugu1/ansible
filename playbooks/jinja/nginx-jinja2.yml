@@ -28,34 +28,34 @@
          tags:
           - install
        - name: Copy the index.j2 Template to index destination folder.
-         template: >
-            src=index.j2
-            dest=/var/www/html/index.nginx-debian.html
-            owner=root
-            group=root
-            mode=0644
+         ansible.builtin.template:
+           src: index.j2
+           dest: /var/www/html/index.nginx-debian.html
+           owner: root
+           group: root
+           mode: '0644'
          notify: Restart Nginx
          tags:
           - j2
 
        - name: Copy the style files to destination folder.
-         copy: >
-            src=/root/ansible/Playbooks/Jinja/style.css
-            dest=/var/www/html/style.css
-            owner=root
-            group=root
-            mode=0644
+         ansible.builtin.copy:
+           src: style.css
+           dest: /var/www/html/style.css
+           owner: root
+           group: root
+           mode: '0644'
          notify: Restart Nginx
          tags:
           - style
 
        - name: Copy the javascript files to destination folder.
-         copy: >
-            src=/root/ansible/Playbooks/Jinja/scorekeeper.js
-            dest=/var/www/html/scorekeeper.js
-            owner=root
-            group=root
-            mode=0644
+         ansible.builtin.copy:
+           src: scorekeeper.js
+           dest: /var/www/html/scorekeeper.js
+           owner: root
+           group: root
+           mode: '0644'
          notify: Restart Nginx
          tags:
           - js
