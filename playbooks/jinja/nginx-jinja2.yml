@@ -29,7 +29,7 @@
           - install
        - name: Copy the index.j2 Template to index destination folder.
          template: >
-            src=/root/ansible/Playbooks/Jinja/index.j2
+            src=index.j2
             dest=/var/www/html/index.nginx-debian.html
             owner=root
             group=root
