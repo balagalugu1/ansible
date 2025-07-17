@@ -19,6 +19,6 @@ resource "aws_instance" "public" {
   tags = {
     Name = "${var.vpc_name}-public_server-${count.index + 1}"
     Env  = var.env
-    Managed = "Terraform"
+    ManagedBy = "Terraform"
   }
 }
