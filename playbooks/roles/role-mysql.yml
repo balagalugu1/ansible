@@ -1,0 +1,62 @@
+---
+- name: Install MySQL Using Ansible Role
+  hosts: pvtip
+  become: yes
+  become_user: root
+  vars:
+   user_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          33396333633663333838353839653937376530313937623135623931646162353237393331383566
+          3337343236656363386236356462376134666162363563300a366336353936343763343562343463
+          32356633313238393332323064356434613762383865383838356339663866313663383933653732
+          6131336539613233350a393138633266323235333336373262643363643436633565373262303436
+          6239
+  roles:
+  - { role: geerlingguy.mysql }
+  tasks:
+  - name: create a new database 
+    mysql_db: >
+      name=myflixdb 
+      state=present 
+      login_user=root
+    tags:
+     - mysql
+  - name: Copy sample data to tmp folder 
+    ansible.builtin.copy:
+      src: dump.sql
+      dest: /tmp/dump.sql
+    tags:
+     - mysql
+  - name: insert sample data into database
+    mysql_db: name=myflixdb state=import target=/tmp/dump.sql
+    tags:
+     - mysql
+  - name: Add records to MySQL
+    mysql_db: name=myflixdb state=import target=/tmp/dump.sql
+    tags:
+     - mysql
+     
+  - name: Removes all anonymous user accounts
+    community.mysql.mysql_user:
+      name: ''
+      host_all: yes
+      state: absent
+
+  - name: Create database user with name 'bob' and password from vault.
+    community.mysql.mysql_user:
+      name: bob
+      password: "{{ '%s' | format(user_password) | regex_replace('\n', '') | password_hash('sha512') }}"
+      priv: '*.*:ALL,GRANT'
+      host: "localhost"
+      state: present
+
+  - name: Create database user with name 'charlie' and password from vault.
+    community.mysql.mysql_user:
+      name: charlie
+      password: "{{ '%s' | format(user_password) | regex_replace('\n', '') | password_hash('sha512') }}"
+      priv: '*.*:ALL,GRANT'
+      host: 'localhost'
+      state: present
+    
+
+  
