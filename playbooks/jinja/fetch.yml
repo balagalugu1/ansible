@@ -10,4 +10,15 @@
       rm -rf /tmp/narasimha
     delegate_to: 127.0.0.1
   tags:
-   - play1
+   - play1 
+   
+- name: Play For DOwnload Files With Folder Name - PLAY 2
+  hosts: pvtip
+  gather_facts: yes
+  tasks:
+  - name: ansible copy file from remote to local
+    fetch:
+     src: /var/www/html/index.nginx-debian.html
+     dest: /tmp/files/ 
+  tags:
+   - play2  
