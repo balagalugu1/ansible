@@ -11,7 +11,7 @@
     delegate_to: 127.0.0.1
   tags:
    - play1 
-   
+
 - name: Play For DOwnload Files With Folder Name - PLAY 2
   hosts: pvtip
   gather_facts: yes
@@ -22,3 +22,23 @@
      dest: /tmp/files/ 
   tags:
    - play2  
+
+- name: Play For DOwnload Files WithOut Folder Name - PLAY 3
+  hosts: pvtip
+  gather_facts: yes
+  become: yes
+  become_user: root
+  serial: 1
+  tasks:
+  - name: Generate Random
+    shell: date +%s
+    register: rannumber
+  - debug:
+      var: rannumber.stdout
+  - name: ansible copy file from remote to local using randomname.
+    fetch:
+     src: /etc/hostname
+     dest: /tmp/hostname-{{ rannumber.stdout }}
+     flat: yes
+  tags:
+   - play3   
