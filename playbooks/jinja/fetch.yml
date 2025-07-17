@@ -1,0 +1,12 @@
+---
+- name: Play For Delete Files and Folders - PLAY 1
+  hosts: pvtip
+  gather_facts: yes
+  tasks:
+  - name: Delete Files and Folders - PLAY 1
+    shell: |
+      rm -rf /tmp/{{ inventory_hostname }}
+      rm -rf /tmp/hostname-*
+    delegate_to: 127.0.0.1
+  tags:
+   - play1
