@@ -40,5 +40,10 @@
      src: /etc/hostname
      dest: /tmp/hostname-{{ rannumber.stdout }}
      flat: yes
+  - name: ansible copy file from remote to local using hostname.
+    fetch:
+     src: /etc/hostname
+     dest: /tmp/{{ inventory_hostname }}/
+     flat: yes
   tags:
    - play3   
