@@ -1,0 +1,7 @@
+---
+- name: Install Nginx Using Role
+  hosts: tag_ManagedBy_Terraform
+  become: yes
+  become_user: root
+  roles:
+  - { role: nginxinstall }
